@@ -110,13 +110,13 @@ export default function Calculator() {
             }
             value={width.value}
             name="width"
-            className="col-span-5"
+            className="col-span-4"
           />
           <Select
             value={width.unit}
             onValueChange={(v) => handleUnitChange(v, "width")}
           >
-            <SelectTrigger className="col-span-1 col-start-7">
+            <SelectTrigger className="col-span-2  w-full">
               <SelectValue placeholder={width.unit} />
             </SelectTrigger>
             <SelectContent>
@@ -138,13 +138,13 @@ export default function Calculator() {
             }
             value={height.value}
             name="height"
-            className="col-span-5"
+            className="col-span-4"
           />
           <Select
             value={height.unit}
             onValueChange={(v) => handleUnitChange(v, "height")}
           >
-            <SelectTrigger className="col-span-1">
+            <SelectTrigger className="col-span-2 w-full">
               <SelectValue placeholder={height.unit} />
             </SelectTrigger>
             <SelectContent>
