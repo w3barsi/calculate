@@ -245,7 +245,6 @@ export default function Calculator() {
           <div className="flex gap-2 flex-col">
             <p>Quantity</p>
             <Input
-              type="number"
               pattern="[0-9]*"
               inputMode="numeric"
               placeholder="quantity"
