@@ -2,10 +2,9 @@
 
 import type React from "react";
 
+import { useState } from "react";
 import { Input } from "~/components/ui/input";
 import { cn } from "~/lib/utils";
-import { Dispatch, SetStateAction, useState } from "react";
-import { SizeObject } from "./calculator";
 
 type NumericInputType = {
   className?: string;
