@@ -94,7 +94,6 @@ export default function Calculator() {
           <Input
             className="col-span-6"
             placeholder="Width in Centimeters"
-            type="number"
             pattern="[0-9]*"
             inputMode="numeric"
             value={cm.w}
@@ -117,7 +116,6 @@ export default function Calculator() {
           <Input
             className="col-span-6"
             placeholder="Height in Centimeters"
-            type="number"
             pattern="[0-9]*"
             inputMode="numeric"
             value={cm.h}
@@ -145,7 +143,6 @@ export default function Calculator() {
           <Input
             className="col-span-6"
             placeholder="Width in Inches"
-            type="number"
             pattern="[0-9]*"
             inputMode="numeric"
             value={inch.w}
@@ -168,7 +165,6 @@ export default function Calculator() {
           <Input
             className="col-span-6"
             placeholder="Height in Centimeters"
-            type="number"
             pattern="[0-9]*"
             inputMode="numeric"
             value={inch.h}
@@ -196,7 +192,6 @@ export default function Calculator() {
           <Input
             className="col-span-6"
             placeholder="Width in Inches"
-            type="number"
             pattern="[0-9]*"
             inputMode="numeric"
             value={ft.w}
@@ -219,7 +214,6 @@ export default function Calculator() {
           <Input
             className="col-span-6"
             placeholder="Height in Centimeters"
-            type="number"
             pattern="[0-9]*"
             inputMode="numeric"
             value={ft.h}
@@ -257,7 +251,6 @@ export default function Calculator() {
           <div className="flex gap-2 flex-col">
             <p>Per square foot</p>
             <Input
-              type="number"
               pattern="[0-9]*"
               inputMode="numeric"
               placeholder="sqft"
@@ -271,7 +264,7 @@ export default function Calculator() {
       </Container>
 
       <Container className="items-center grid grid-cols-7">
-        <h1 className="font-bold text-xl col-span-1">Total: </h1>
+        <h1 className="font-bold  col-span-1">Total: </h1>
         <span
           className="w-full border col-span-6 rounded-sm p-2 text-xl bg-black text-white text-center"
           onClick={() => {
