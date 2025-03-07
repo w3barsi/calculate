@@ -20,7 +20,7 @@ function Container({
   return (
     <div
       className={cn(
-        "w-full max-w-lg flex gap-2 flex-col p-4 border rounded-md",
+        "w-full max-w-lg flex gap-2 flex-col p-2 lg:p-4 border rounded-md",
         className,
       )}
     >
