@@ -2,264 +2,188 @@
 
 export const dynamic = "force-dynamic";
 
-import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
-import { ReactNode, useEffect, useState } from "react";
-import { useLocalStorage } from "./use-local-storage";
-import { Button } from "@/components/ui/button";
-import { ArrowUp, Copy } from "lucide-react";
+import { useLocalStorage } from "~/hooks/use-local-storage";
+import { ArrowUp } from "lucide-react";
 import { toast } from "sonner";
+import { Container } from "~/components/container";
+import { InstallPrompt } from "~/components/install-prompt";
+import { Label } from "~/components/ui/label";
+import NumericInput from "./numeric-input";
+import {
+  Select,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+} from "~/components/ui/select";
+import { z } from "zod";
+import { useEffect, useState } from "react";
+import Image from "next/image";
 
-function Container({
-  children,
-  className,
-}: {
-  children: ReactNode;
-  className?: string;
-}) {
-  return (
-    <div
-      className={cn(
-        "w-full max-w-lg flex gap-2 flex-col p-2 lg:p-4 border rounded-md",
-        className,
-      )}
-    >
-      {children}
-    </div>
-  );
-}
-
-function InstallPrompt() {
-  const [isIOS, setIsIOS] = useState(false);
-  const [isStandalone, setIsStandalone] = useState(false);
-
-  useEffect(() => {
-    setIsIOS(
-      /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream,
-    );
-
-    setIsStandalone(window.matchMedia("(display-mode: standalone)").matches);
-  }, []);
-
-  if (isStandalone) {
-    return null; // Don't show install button if already installed
-  }
-
-  return (
-    isIOS && (
-      <Container>
-        <p>
-          To install this app on your iOS device, tap the share button
-          <span role="img" aria-label="share icon">
-            {" "}
-            ⎋{" "}
-          </span>
-          and then "Add to Home Screen"
-          <span role="img" aria-label="plus icon">
-            {" "}
-            ➕{" "}
-          </span>
-          .
-        </p>
-      </Container>
-    )
-  );
-}
+const isValidUnit = z.enum(["ft", "in", "cm", "m"]).parse;
+export type SizeObject = {
+  value: string;
+  unit: "ft" | "in" | "cm" | "m";
+};
 
 export default function Calculator() {
-  const [cm, setCm] = useLocalStorage("cm", { w: 0, h: 0 });
-  const [inch, setInch] = useLocalStorage("in", { w: 0, h: 0 });
-  const [ft, setFt] = useLocalStorage("ft", { w: 0, h: 0 });
-  const [details, setDetails] = useLocalStorage("details", {
-    qty: 1,
-    sqft: 20,
+  const [width, setWidth] = useLocalStorage<SizeObject>("w", {
+    value: "0",
+    unit: "ft",
+  });
+  const [height, setHeight] = useLocalStorage<SizeObject>("h", {
+    value: "0",
+    unit: "ft",
   });
 
+  const [details, setDetails] = useLocalStorage("details", {
+    qty: "1",
+    sqft: "20",
+  });
   const [total, setTotal] = useLocalStorage("total", 0);
 
   useEffect(() => {
-    setTotal(Math.floor(ft.h * ft.w * details.qty * details.sqft));
-  }, [ft, details]);
+    // Debounce the total calculation
+    const timeoutId = setTimeout(() => {
+      const qty = Number(details.qty);
+      const sqft = Number(details.sqft);
+
+      const calculatedTotal =
+        calculateSize(width.value, "width") *
+        calculateSize(height.value, "height") *
+        sqft *
+        qty;
+      sqft * qty;
+      setTotal(Math.floor(calculatedTotal));
+    }, 300); // Adjust debounce time as needed (e.g., 300ms)
+
+    // Cleanup function to clear the timeout if any dependency changes
+    return () => clearTimeout(timeoutId);
+  }, [width, height, details]); // Dependencies: effect runs when any of these change
+
+  const calculateSize = (size: string, sizeType: "width" | "height") => {
+    const unit = sizeType === "width" ? width.unit : height.unit;
+    const value = Number(size);
+    let actualNewValue: number;
+
+    if (unit === "ft") {
+      actualNewValue = value;
+    } else if (unit === "in") {
+      actualNewValue = value / 12;
+    } else if (unit === "cm") {
+      actualNewValue = value / 2.54 / 12;
+    } else {
+      actualNewValue = (value * 100) / 2.54 / 12;
+    }
+
+    return actualNewValue;
+  };
+
+  const handleUnitChange = (unit: string, sizeType: "width" | "height") => {
+    const a = isValidUnit(unit);
+    if (sizeType === "width") {
+      setWidth((oldValue) => ({ ...oldValue, unit: a }));
+    } else {
+      setHeight((oldValue) => ({ ...oldValue, unit: a }));
+    }
+  };
 
   return (
-    <div className="flex gap-2 p-2  items-center h-screen flex-col">
+    <div className="flex gap-2 p-2  items-center  h-screen flex-col">
+      <div className="w-full max-w-lg items-center justify-center flex p-4">
+        <Image
+          alt="Darcy Graphix Logo"
+          width={400}
+          height={0}
+          src="/logo.svg"
+        />
+      </div>
       <Container>
-        <h1 className="font-bold">Centimeters</h1>
-        <div className="grid grid-cols-7 gap-2 items-center">
-          <p className="col-span-1">Width: </p>{" "}
-          <Input
-            className="col-span-6"
-            placeholder="Width in Centimeters"
-            type="text"
-            pattern="^[0-9]+(\.[0-9]*)?$"
-            inputMode="decimal"
-            value={cm.w}
-            onChange={(e) => {
-              setCm((cm) => ({
-                w: Number(e.target.value),
-                h: cm.h,
-              }));
-              setInch((inch) => ({
-                w: Number(e.target.value) / 2.54,
-                h: inch.h,
-              }));
-              setFt((v) => ({
-                w: Number(e.target.value) / 12 / 2.54,
-                h: v.h,
-              }));
-            }}
+        <div className="grid grid-cols-7 gap-1">
+          <Label htmlFor="width" className="col-span-1">
+            Width:
+          </Label>
+          <NumericInput
+            errorClassName="row-start-2"
+            handleStateChange={(value) =>
+              setWidth((oldValue) => ({ ...oldValue, value }))
+            }
+            value={width.value}
+            name="width"
+            className="col-span-5"
           />
-          <p className="col-span-1">Height: </p>
-          <Input
-            className="col-span-6"
-            placeholder="Height in Centimeters"
-            pattern="[0-9.]*"
-            inputMode="decimal"
-            value={cm.h}
-            onChange={(e) => {
-              setCm((cm) => ({
-                w: cm.w,
-                h: Number(e.target.value),
-              }));
-              setInch((inch) => ({
-                w: inch.w,
-                h: Number(e.target.value) / 2.54,
-              }));
-              setFt((v) => ({
-                w: v.w,
-                h: Number(e.target.value) / 12 / 2.54,
-              }));
-            }}
-          />
+          <Select
+            value={width.unit}
+            onValueChange={(v) => handleUnitChange(v, "width")}
+          >
+            <SelectTrigger className="col-span-1 col-start-7">
+              <SelectValue placeholder={width.unit} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="ft">ft</SelectItem>
+              <SelectItem value="in">in</SelectItem>
+              <SelectItem value="cm">cm</SelectItem>
+              <SelectItem value="m">m</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
-      </Container>
-      <Container>
-        <h1 className="font-bold">Inches</h1>
-        <div className="grid grid-cols-7 gap-2 items-center">
-          <p className="col-span-1">Width: </p>{" "}
-          <Input
-            className="col-span-6"
-            placeholder="Width in Inches"
-            pattern="[0-9.]*"
-            inputMode="decimal"
-            value={inch.w}
-            onChange={(e) => {
-              setInch((inch) => ({
-                w: Number(e.target.value),
-                h: inch.h,
-              }));
-              setCm((cm) => ({
-                w: Number(e.target.value) * 2.54,
-                h: cm.h,
-              }));
-              setFt((v) => ({
-                w: Number(e.target.value) / 12,
-                h: v.h,
-              }));
-            }}
+        <div className="grid grid-cols-7 gap-1">
+          <Label htmlFor="width" className="col-span-1">
+            Height:
+          </Label>
+          <NumericInput
+            errorClassName="row-start-2"
+            handleStateChange={(value) =>
+              setHeight((oldValue) => ({ ...oldValue, value }))
+            }
+            value={height.value}
+            name="height"
+            className="col-span-5"
           />
-          <p className="col-span-1">Height: </p>
-          <Input
-            className="col-span-6"
-            placeholder="Height in Centimeters"
-            pattern="[0-9.]*"
-            inputMode="decimal"
-            value={inch.h}
-            onChange={(e) => {
-              setInch((inch) => ({
-                w: inch.w,
-                h: Number(e.target.value),
-              }));
-              setCm((cm) => ({
-                w: cm.w,
-                h: Number(e.target.value) * 2.54,
-              }));
-              setFt((v) => ({
-                w: v.w,
-                h: Number(e.target.value) / 12,
-              }));
-            }}
-          />
+          <Select
+            value={height.unit}
+            onValueChange={(v) => handleUnitChange(v, "height")}
+          >
+            <SelectTrigger className="col-span-1">
+              <SelectValue placeholder={height.unit} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="ft">ft</SelectItem>
+              <SelectItem value="in">in</SelectItem>
+              <SelectItem value="cm">cm</SelectItem>
+              <SelectItem value="m">m</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </Container>
       <Container>
-        <h1 className="font-bold">Feet</h1>
-        <div className="grid grid-cols-7 gap-2 items-center">
-          <p className="col-span-1">Width: </p>{" "}
-          <Input
-            className="col-span-6"
-            placeholder="Width in Inches"
-            pattern="[0-9.]*"
-            inputMode="decimal"
-            value={ft.w}
-            onChange={(e) => {
-              setFt((v) => ({
-                w: Number(e.target.value),
-                h: v.h,
-              }));
-              setInch((v) => ({
-                w: Number(e.target.value) * 12,
-                h: v.h,
-              }));
-              setCm((v) => ({
-                w: Number(e.target.value) * 2.54 * 12,
-                h: v.h,
-              }));
-            }}
+        <div className="grid grid-cols-8 gap-1">
+          <Label htmlFor="sqft" className="col-span-4">
+            Quantity
+          </Label>
+          <NumericInput
+            value={details.qty}
+            handleStateChange={(value) =>
+              setDetails((oldValue) => ({ ...oldValue, qty: value }))
+            }
+            name="sqft"
+            errorClassName="row-start-3 col-start-1 col-span-4"
+            className="col-span-4 row-start-2"
           />
-          <p className="col-span-1">Height: </p>
-          <Input
-            className="col-span-6"
-            placeholder="Height in Centimeters"
-            pattern="[0-9.]*"
-            inputMode="decimal"
-            value={ft.h}
-            onChange={(e) => {
-              setFt((v) => ({
-                w: v.w,
-                h: Number(e.target.value),
-              }));
-              setInch((inch) => ({
-                w: inch.w,
-                h: Number(e.target.value) * 12,
-              }));
-              setCm((cm) => ({
-                w: cm.w,
-                h: Number(e.target.value) * 2.54 * 12,
-              }));
-            }}
+          <Label htmlFor="sqft" className="col-span-4 col-start-5">
+            Per square foot
+          </Label>
+          <NumericInput
+            name="sqft"
+            value={details.sqft}
+            handleStateChange={(value) =>
+              setDetails((oldValue) => ({ ...oldValue, sqft: value }))
+            }
+            errorClassName="row-start-3 col-span-4 col-start-5"
+            className="col-span-4 row-start-2"
           />
         </div>
       </Container>
-      <Container className="w-full">
-        <div className="grid grid-cols-2 gap-2">
-          <div className="flex gap-2 flex-col">
-            <p>Quantity</p>
-            <Input
-              pattern="[0-9.]*"
-              inputMode="decimal"
-              placeholder="quantity"
-              value={details.qty}
-              onChange={(e) =>
-                setDetails((d) => ({ ...d, qty: Number(e.target.value) }))
-              }
-            />
-          </div>
-          <div className="flex gap-2 flex-col">
-            <p>Per square foot</p>
-            <Input
-              pattern="[0-9.]*"
-              inputMode="decimal"
-              placeholder="sqft"
-              value={details.sqft}
-              onChange={(e) =>
-                setDetails((d) => ({ ...d, sqft: Number(e.target.value) }))
-              }
-            />
-          </div>
-        </div>
-      </Container>
-
       <Container className="items-center grid grid-cols-7">
         <h1 className="font-bold  col-span-1">Total: </h1>
         <span
