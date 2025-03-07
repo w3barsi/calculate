@@ -107,7 +107,7 @@ function Container({
   return (
     <div
       className={cn(
-        "flex gap-2 flex-col p-4 border w-150 rounded-md",
+        "container flex gap-2 flex-col p-4 border rounded-md",
         className,
       )}
     >
