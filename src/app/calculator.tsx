@@ -94,6 +94,8 @@ export default function Calculator() {
             className="col-span-6"
             placeholder="Width in Centimeters"
             type="number"
+            pattern="[0-9]*"
+            inputMode="numeric"
             value={cm.w}
             onChange={(e) => {
               setCm((cm) => ({
@@ -115,6 +117,8 @@ export default function Calculator() {
             className="col-span-6"
             placeholder="Height in Centimeters"
             type="number"
+            pattern="[0-9]*"
+            inputMode="numeric"
             value={cm.h}
             onChange={(e) => {
               setCm((cm) => ({
@@ -141,6 +145,8 @@ export default function Calculator() {
             className="col-span-6"
             placeholder="Width in Inches"
             type="number"
+            pattern="[0-9]*"
+            inputMode="numeric"
             value={inch.w}
             onChange={(e) => {
               setInch((inch) => ({
@@ -162,6 +168,8 @@ export default function Calculator() {
             className="col-span-6"
             placeholder="Height in Centimeters"
             type="number"
+            pattern="[0-9]*"
+            inputMode="numeric"
             value={inch.h}
             onChange={(e) => {
               setInch((inch) => ({
@@ -188,6 +196,8 @@ export default function Calculator() {
             className="col-span-6"
             placeholder="Width in Inches"
             type="number"
+            pattern="[0-9]*"
+            inputMode="numeric"
             value={ft.w}
             onChange={(e) => {
               setFt((v) => ({
@@ -209,6 +219,8 @@ export default function Calculator() {
             className="col-span-6"
             placeholder="Height in Centimeters"
             type="number"
+            pattern="[0-9]*"
+            inputMode="numeric"
             value={ft.h}
             onChange={(e) => {
               setFt((v) => ({
