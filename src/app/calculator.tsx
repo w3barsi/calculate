@@ -79,22 +79,19 @@ export default function Calculator() {
 
   useEffect(() => {
     setTotal(Math.floor(ft.h * ft.w * details.qty * details.sqft));
-  }, []);
-
-  useEffect(() => {
-    setTotal(Math.floor(ft.h * ft.w * details.qty * details.sqft));
   }, [ft, details]);
 
   return (
     <div className="flex gap-2 p-2  items-center h-screen flex-col">
-      <Container className="">
+      <Container>
         <h1 className="font-bold">Centimeters</h1>
         <div className="grid grid-cols-7 gap-2 items-center">
           <p className="col-span-1">Width: </p>{" "}
           <Input
             className="col-span-6"
             placeholder="Width in Centimeters"
-            pattern="[0-9]*"
+            type="text"
+            pattern="^[0-9]+(\.[0-9]*)?$"
             inputMode="decimal"
             value={cm.w}
             onChange={(e) => {
@@ -116,7 +113,7 @@ export default function Calculator() {
           <Input
             className="col-span-6"
             placeholder="Height in Centimeters"
-            pattern="[0-9]*"
+            pattern="[0-9.]*"
             inputMode="decimal"
             value={cm.h}
             onChange={(e) => {
@@ -136,14 +133,14 @@ export default function Calculator() {
           />
         </div>
       </Container>
-      <Container className="">
+      <Container>
         <h1 className="font-bold">Inches</h1>
         <div className="grid grid-cols-7 gap-2 items-center">
           <p className="col-span-1">Width: </p>{" "}
           <Input
             className="col-span-6"
             placeholder="Width in Inches"
-            pattern="[0-9]*"
+            pattern="[0-9.]*"
             inputMode="decimal"
             value={inch.w}
             onChange={(e) => {
@@ -165,7 +162,7 @@ export default function Calculator() {
           <Input
             className="col-span-6"
             placeholder="Height in Centimeters"
-            pattern="[0-9]*"
+            pattern="[0-9.]*"
             inputMode="decimal"
             value={inch.h}
             onChange={(e) => {
@@ -192,7 +189,7 @@ export default function Calculator() {
           <Input
             className="col-span-6"
             placeholder="Width in Inches"
-            pattern="[0-9]*"
+            pattern="[0-9.]*"
             inputMode="decimal"
             value={ft.w}
             onChange={(e) => {
@@ -214,7 +211,7 @@ export default function Calculator() {
           <Input
             className="col-span-6"
             placeholder="Height in Centimeters"
-            pattern="[0-9]*"
+            pattern="[0-9.]*"
             inputMode="decimal"
             value={ft.h}
             onChange={(e) => {
@@ -239,7 +236,7 @@ export default function Calculator() {
           <div className="flex gap-2 flex-col">
             <p>Quantity</p>
             <Input
-              pattern="[0-9]*"
+              pattern="[0-9.]*"
               inputMode="decimal"
               placeholder="quantity"
               value={details.qty}
@@ -251,7 +248,7 @@ export default function Calculator() {
           <div className="flex gap-2 flex-col">
             <p>Per square foot</p>
             <Input
-              pattern="[0-9]*"
+              pattern="[0-9.]*"
               inputMode="decimal"
               placeholder="sqft"
               value={details.sqft}
