@@ -95,7 +95,7 @@ export default function Calculator() {
             className="col-span-6"
             placeholder="Width in Centimeters"
             pattern="[0-9]*"
-            inputMode="numeric"
+            inputMode="decimal"
             value={cm.w}
             onChange={(e) => {
               setCm((cm) => ({
@@ -117,7 +117,7 @@ export default function Calculator() {
             className="col-span-6"
             placeholder="Height in Centimeters"
             pattern="[0-9]*"
-            inputMode="numeric"
+            inputMode="decimal"
             value={cm.h}
             onChange={(e) => {
               setCm((cm) => ({
@@ -144,7 +144,7 @@ export default function Calculator() {
             className="col-span-6"
             placeholder="Width in Inches"
             pattern="[0-9]*"
-            inputMode="numeric"
+            inputMode="decimal"
             value={inch.w}
             onChange={(e) => {
               setInch((inch) => ({
@@ -166,7 +166,7 @@ export default function Calculator() {
             className="col-span-6"
             placeholder="Height in Centimeters"
             pattern="[0-9]*"
-            inputMode="numeric"
+            inputMode="decimal"
             value={inch.h}
             onChange={(e) => {
               setInch((inch) => ({
@@ -193,7 +193,7 @@ export default function Calculator() {
             className="col-span-6"
             placeholder="Width in Inches"
             pattern="[0-9]*"
-            inputMode="numeric"
+            inputMode="decimal"
             value={ft.w}
             onChange={(e) => {
               setFt((v) => ({
@@ -215,7 +215,7 @@ export default function Calculator() {
             className="col-span-6"
             placeholder="Height in Centimeters"
             pattern="[0-9]*"
-            inputMode="numeric"
+            inputMode="decimal"
             value={ft.h}
             onChange={(e) => {
               setFt((v) => ({
@@ -240,7 +240,7 @@ export default function Calculator() {
             <p>Quantity</p>
             <Input
               pattern="[0-9]*"
-              inputMode="numeric"
+              inputMode="decimal"
               placeholder="quantity"
               value={details.qty}
               onChange={(e) =>
@@ -252,7 +252,7 @@ export default function Calculator() {
             <p>Per square foot</p>
             <Input
               pattern="[0-9]*"
-              inputMode="numeric"
+              inputMode="decimal"
               placeholder="sqft"
               value={details.sqft}
               onChange={(e) =>
