@@ -245,6 +245,9 @@ export default function Calculator() {
           <div className="flex gap-2 flex-col">
             <p>Quantity</p>
             <Input
+              type="number"
+              pattern="[0-9]*"
+              inputMode="numeric"
               placeholder="quantity"
               value={details.qty}
               onChange={(e) =>
@@ -255,6 +258,9 @@ export default function Calculator() {
           <div className="flex gap-2 flex-col">
             <p>Per square foot</p>
             <Input
+              type="number"
+              pattern="[0-9]*"
+              inputMode="numeric"
               placeholder="sqft"
               value={details.sqft}
               onChange={(e) =>
