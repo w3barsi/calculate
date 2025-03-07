@@ -7,7 +7,8 @@ import { cn } from "@/lib/utils";
 import { ReactNode, useEffect, useState } from "react";
 import { useLocalStorage } from "./use-local-storage";
 import { Button } from "@/components/ui/button";
-import { Copy } from "lucide-react";
+import { ArrowUp, Copy } from "lucide-react";
+import { toast } from "sonner";
 
 function Container({
   children,
@@ -270,12 +271,14 @@ export default function Calculator() {
           className="w-full border col-span-6 rounded-sm p-2 text-xl bg-black text-white text-center"
           onClick={() => {
             navigator.clipboard.writeText(String(total));
+            toast.success("Copied to clipboard!");
           }}
         >
           {total}
         </span>
-        <span className="col-start-2 col-span-6 text-center">
-          Click me to copy total!
+        <span className="col-start-2 col-span-6 flex justify-center gap-1">
+          <ArrowUp />
+          Click to copy total!
         </span>
       </Container>
       <InstallPrompt />
